@@ -59,6 +59,10 @@ These contracts are the shared interface between modules. Keep external boundari
 
 - `solved_problem_ids` is a list at the module/API boundary. A recommender may convert it to a set internally.
 - `rating` may be `null` for unrated users; callers must handle this explicitly.
+- Only submissions with `verdict == "OK"` contribute solved problems.
+- A solved problem appears at most once, even when the user has multiple accepted submissions for it.
+- Problems without a `contest_id` cannot produce a `ProblemId` and are excluded.
+- `tag_solve_counts` counts each tag once per unique solved problem.
 
 ## Problem
 

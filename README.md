@@ -53,16 +53,18 @@ ruff check .
 
 ```python
 from src.data.codeforces_client import CodeforcesClient
+from src.data.user_history import build_user_context
 
 client = CodeforcesClient()
 
 profile = client.get_user_profile("tourist")
 submissions = client.get_user_submissions(profile["handle"])
+user_context = build_user_context(profile, submissions)
 
-print(profile)
-print(f"Fetched {len(submissions)} submissions.")
+print(user_context)
 ```
 
 - `get_user_profile()` returns the canonical handle and current rating. The rating is `None` for unrated users.
 - `get_user_submissions()` returns normalized submission records without filtering by verdict. Solved-problem extraction and tag aggregation are handled by the user-history processor.
+- `build_user_context()` derives unique solved problem IDs and tag solve counts from accepted submissions with a valid contest ID.
 - The client raises `CodeforcesUserNotFoundError` for a non-existent handle and `CodeforcesClientError` for network or Codeforces API failures.
