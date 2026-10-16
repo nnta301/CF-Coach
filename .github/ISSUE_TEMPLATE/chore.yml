@@ -1,0 +1,42 @@
+name: Chore or workflow task
+description: Propose maintenance, documentation, configuration, or process work.
+title: "[Chore]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for repository maintenance, documentation, configuration, and workflow work.
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What improvement or maintenance outcome is needed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: List the files, configuration, or workflow affected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: Define the observable completion conditions.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List related issues, decisions, or prerequisites.
+      placeholder: None.
