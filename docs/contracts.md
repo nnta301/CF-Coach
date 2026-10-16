@@ -7,6 +7,41 @@ These contracts are the shared interface between modules. Keep external boundari
 - Format: `<contest_id>-<index>`
 - Example: `123-A`
 
+## UserProfile
+
+```json
+{
+  "handle": "tourist",
+  "rating": 3856
+}
+```
+
+- `rating` may be `null` for unrated users.
+- `handle` is the canonical handle returned by Codeforces.
+
+## Submission
+
+```json
+{
+  "submission_id": 123456789,
+  "creation_time_seconds": 1700000000,
+  "verdict": "OK",
+  "problem": {
+    "contest_id": 123,
+    "index": "A",
+    "name": "Example Problem",
+    "rating": 1700,
+    "tags": ["implementation"]
+  }
+}
+```
+
+- `verdict` may be `null` when Codeforces does not provide a final verdict.
+- `contest_id` and `rating` may be `null`.
+- `tags` is always a list of strings.
+- The user-history processor derives `ProblemId` from `<contest_id>-<index>` when `contest_id` is available.
+- The API client returns submissions without filtering by verdict.
+
 ## UserContext
 
 ```json

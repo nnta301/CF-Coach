@@ -48,3 +48,21 @@ With the virtual environment activated:
 pytest
 ruff check .
 ```
+
+## Codeforces API client
+
+```python
+from src.data.codeforces_client import CodeforcesClient
+
+client = CodeforcesClient()
+
+profile = client.get_user_profile("tourist")
+submissions = client.get_user_submissions(profile["handle"])
+
+print(profile)
+print(f"Fetched {len(submissions)} submissions.")
+```
+
+- `get_user_profile()` returns the canonical handle and current rating. The rating is `None` for unrated users.
+- `get_user_submissions()` returns normalized submission records without filtering by verdict. Solved-problem extraction and tag aggregation are handled by the user-history processor.
+- The client raises `CodeforcesUserNotFoundError` for a non-existent handle and `CodeforcesClientError` for network or Codeforces API failures.
