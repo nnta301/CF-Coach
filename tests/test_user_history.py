@@ -128,3 +128,22 @@ def test_unrated_user_with_no_valid_solved_problems_has_empty_history() -> None:
         "solved_problem_ids": [],
         "tag_solve_counts": {},
     }
+
+def test_build_user_context_counts_duplicate_tags_once_per_problem() -> None:
+    profile = {"handle": "tourist", "rating": 3856}
+    submissions = [
+        make_submission(
+            submission_id=1,
+            verdict="OK",
+            contest_id=4,
+            index="A",
+            tags=["math", "math", "implementation"],
+        ),
+    ]
+
+    context = build_user_context(profile, submissions)
+
+    assert context["tag_solve_counts"] == {
+        "math": 1,
+        "implementation": 1,
+    }

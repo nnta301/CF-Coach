@@ -32,7 +32,8 @@ def build_user_context(
 
         seen_problem_ids.add(problem_id)
         solved_problem_ids.append(problem_id)
-        tag_solve_counts.update(problem["tags"])
+        unique_tags = list(dict.fromkeys(problem["tags"]))
+        tag_solve_counts.update(unique_tags)
 
     return {
         "handle": profile["handle"],
