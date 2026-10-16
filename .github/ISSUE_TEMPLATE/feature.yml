@@ -1,0 +1,52 @@
+name: Feature request
+description: Propose a scoped product or engineering improvement.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe a concrete feature that the team can evaluate and plan.
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome should this feature achieve?
+      placeholder: Describe the user or project value.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What work is included?
+      placeholder: List the expected components or behaviors.
+    validations:
+      required: true
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What is explicitly not included?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: What must be true for this issue to be complete?
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List related issues, contracts, decisions, or blockers.
+      placeholder: None.
