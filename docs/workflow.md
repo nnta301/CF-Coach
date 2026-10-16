@@ -35,6 +35,7 @@ Every card must correspond to a GitHub Issue.
 - The other teammate reviews before merge.
 - A bug is recorded as a GitHub Issue with reproduction steps, expected result, actual result, and evidence.
 - GitHub Actions runs `pytest` and `ruff check .` for pull requests targeting `main` and pushes to `main`. It is informational initially and is not a required merge check.
+- CI installs dependencies from the committed `requirements-dev.lock`. Update the lock intentionally when dependency requirements change.
 
 ## Shared environment
 
