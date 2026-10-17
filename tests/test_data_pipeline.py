@@ -130,9 +130,15 @@ def test_data_pipeline_builds_normalized_user_context_for_valid_handle() -> None
             "implementation": 2,
         },
     }
-    assert [call["params"] for call in session.calls] == [
-        {"handles": "tourist"},
-        {"handle": "tourist"},
+    assert [(call["url"], call["params"]) for call in session.calls] == [
+        (
+            f"{CodeforcesClient.BASE_URL}/user.info",
+            {"handles": "tourist"},
+        ),
+        (
+            f"{CodeforcesClient.BASE_URL}/user.status",
+            {"handle": "tourist"},
+        ),
     ]
 
 
@@ -153,8 +159,12 @@ def test_data_pipeline_raises_for_nonexistent_handle() -> None:
     with pytest.raises(CodeforcesUserNotFoundError):
         client.get_user_profile("missing_user")
 
-    assert len(session.calls) == 1
-    assert session.calls[0]["params"] == {"handles": "missing_user"}
+    assert [(call["url"], call["params"]) for call in session.calls] == [
+        (
+            f"{CodeforcesClient.BASE_URL}/user.info",
+            {"handles": "missing_user"},
+        ),
+    ]
 
 
 def test_data_pipeline_returns_empty_history_for_user_with_no_solved_problems() -> None:
