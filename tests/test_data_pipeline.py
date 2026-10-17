@@ -53,6 +53,16 @@ def make_client(session: FakeSession) -> CodeforcesClient:
     )
 
 
+def build_user_context_from_handle(
+    client: CodeforcesClient,
+    handle: str,
+) -> dict[str, Any]:
+    """Build normalized context through every data-pipeline stage."""
+    profile = client.get_user_profile(handle)
+    submissions = client.get_user_submissions(profile["handle"])
+    return build_user_context(profile, submissions)
+
+
 def make_api_submission(
     *,
     submission_id: int,
@@ -117,9 +127,7 @@ def test_data_pipeline_builds_normalized_user_context_for_valid_handle() -> None
     )
     client = make_client(session)
 
-    profile = client.get_user_profile(" tourist ")
-    submissions = client.get_user_submissions(profile["handle"])
-    context = build_user_context(profile, submissions)
+    context = build_user_context_from_handle(client, " tourist ")
 
     assert context == {
         "handle": "tourist",
@@ -157,7 +165,7 @@ def test_data_pipeline_raises_for_nonexistent_handle() -> None:
     client = make_client(session)
 
     with pytest.raises(CodeforcesUserNotFoundError):
-        client.get_user_profile("missing_user")
+        build_user_context_from_handle(client, "missing_user")
 
     assert [(call["url"], call["params"]) for call in session.calls] == [
         (
@@ -201,9 +209,7 @@ def test_data_pipeline_returns_empty_history_for_user_with_no_solved_problems() 
     )
     client = make_client(session)
 
-    profile = client.get_user_profile("new_user")
-    submissions = client.get_user_submissions(profile["handle"])
-    context = build_user_context(profile, submissions)
+    context = build_user_context_from_handle(client, "new_user")
 
     assert context == {
         "handle": "new_user",
