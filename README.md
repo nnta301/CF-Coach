@@ -6,6 +6,8 @@ CF-Coach is a personalized Codeforces problem recommender for competitive progra
 
 Current sprint: [Sprint 1](docs/sprints/sprint-01.md)
 
+Problem catalog, baseline recommender, and CLI implementations are available on the Sprint 1 feature branches and are pending teammate review and merge.
+
 ## Documentation
 
 - [Proposal](docs/proposal.md)
@@ -99,3 +101,18 @@ recommendations = recommend(user_context, problems, limit=10)
 - Uses `score = 0.8 / (1 + abs(problem_rating - target_rating) / 400) + 0.2 * tag_boost`, where `tag_boost` is the mean of `1 / (1 + solved_count)` over the problem's unique tags. An unseen tag has count zero; an untagged problem receives no tag boost. These weights are a transparent Sprint 1 heuristic, not a learned model.
 - Uses rating 800 for an unrated user and explicitly states that fallback in each reason. Otherwise the target is the user's current rating.
 - Every reason states rating distance and the least-practiced tag's solved count, when tags exist. Ties use smaller rating distance, then lexicographic problem ID for repeatable ordering.
+
+## Recommendation CLI
+
+From the repository root, with the virtual environment activated:
+
+```bash
+python -m src.app tourist
+python -m src.app --help
+```
+
+The CLI fetches the user's profile, submission history, and problem catalog, then displays 10 unsolved recommendations with name, rating, tags, URL, and reason. It uses the canonical handle returned by Codeforces. Unrated users see the starting-rating fallback in each reason.
+
+If fewer than 10 eligible problems exist, it shows all available results and explains the shortfall. An empty result is reported explicitly. Invalid/blank handles and API/network failures produce a readable message on stderr and exit status 1; argument usage errors use exit status 2. Successful output, including an empty result, uses exit status 0.
+
+This command needs internet access and makes three paced Codeforces API requests. It does not cache responses. Tests use fake HTTP responses and do not contact Codeforces.

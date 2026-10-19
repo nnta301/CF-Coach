@@ -46,7 +46,12 @@ _To be completed at the end of the sprint._
 ### Evidence
 
 - Pull requests:
+  - #5 problem catalog: [PR #17](https://github.com/nnta301/CF-Coach/pull/17), pending teammate review and merge.
+  - #6 baseline recommender: [PR #18](https://github.com/nnta301/CF-Coach/pull/18), draft depending on PR #17.
+- #7 CLI implementation is on `feat/7-recommendation-cli`, depending on PR #18; teammate review and merge remain pending.
 - Demo/test results:
+  - The combined #5–#7 implementation passed 60 local pytest tests and `ruff check .`. CLI tests cover raw fake API responses through display, invalid handles, unrated users, and insufficient candidates.
+  - `python -m src.app tourist` successfully displayed 10 recommendations using the live Codeforces API on 19 Oct 2026. The full three-handle demo remains part of #8.
 
 ## Retrospective
 
