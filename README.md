@@ -68,3 +68,19 @@ print(user_context)
 - `get_user_submissions()` returns normalized submission records without filtering by verdict. Solved-problem extraction and tag aggregation are handled by the user-history processor.
 - `build_user_context()` derives unique solved problem IDs and tag solve counts from accepted submissions with a valid contest ID.
 - The client raises `CodeforcesUserNotFoundError` for a non-existent handle and `CodeforcesClientError` for network or Codeforces API failures.
+
+## Problem catalog
+
+```python
+from src.data.codeforces_client import CodeforcesClient
+from src.data.problem_catalog import fetch_problem_catalog
+
+problems = fetch_problem_catalog(CodeforcesClient())
+print(problems[:3])
+```
+
+- Fetches the public `problemset.problems` endpoint using the existing client's timeout, request pacing, and error handling.
+- Returns unique `Problem` records matching [the shared contract](docs/contracts.md), with IDs such as `123-A` and public problem URLs.
+- Skips problems with a missing/null rating or contest ID; no rating is guessed. An empty catalog returns an empty list.
+- Preserves API order, keeps the first occurrence of a duplicate problem ID, and removes repeated tags.
+- Malformed records raise `CodeforcesResponseError`; network/API failures are propagated rather than returned as an empty catalog.
