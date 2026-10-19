@@ -84,3 +84,18 @@ print(problems[:3])
 - Skips problems with a missing/null rating or contest ID; no rating is guessed. An empty catalog returns an empty list.
 - Preserves API order, keeps the first occurrence of a duplicate problem ID, and removes repeated tags.
 - Malformed records raise `CodeforcesResponseError`; network/API failures are propagated rather than returned as an empty catalog.
+
+## Baseline recommendations
+
+```python
+from src.recommender.baseline import recommend
+
+# user_context and problems come from the data examples above.
+recommendations = recommend(user_context, problems, limit=10)
+```
+
+- Accepts the shared `UserContext` and normalized `Problem` records and returns JSON-serializable `RecommendationItem` records.
+- Excludes solved problems, duplicate IDs, and problems with null ratings. Returns 10 results by default when enough candidates exist, otherwise all available candidates; it never pads with solved or repeated problems.
+- Uses `score = 0.8 / (1 + abs(problem_rating - target_rating) / 400) + 0.2 * tag_boost`, where `tag_boost` is the mean of `1 / (1 + solved_count)` over the problem's unique tags. An unseen tag has count zero; an untagged problem receives no tag boost. These weights are a transparent Sprint 1 heuristic, not a learned model.
+- Uses rating 800 for an unrated user and explicitly states that fallback in each reason. Otherwise the target is the user's current rating.
+- Every reason states rating distance and the least-practiced tag's solved count, when tags exist. Ties use smaller rating distance, then lexicographic problem ID for repeatable ordering.
