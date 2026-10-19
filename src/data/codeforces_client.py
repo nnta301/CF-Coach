@@ -21,7 +21,7 @@ class CodeforcesResponseError(CodeforcesClientError):
 
 
 class CodeforcesClient:
-    """Fetch and normalize public Codeforces user data."""
+    """Fetch public Codeforces data and normalize user records."""
 
     BASE_URL = "https://codeforces.com/api"
 
@@ -82,6 +82,15 @@ class CodeforcesClient:
             )
 
         return [self._normalize_submission(submission) for submission in result]
+
+    def get_problemset(self) -> list[dict[str, Any]]:
+        """Return raw problem records for the problem-catalog normalizer."""
+        result = self._request(method="problemset.problems", params={})
+        if not isinstance(result, dict) or not isinstance(result.get("problems"), list):
+            raise CodeforcesResponseError(
+                "Expected a problems list in the problemset.problems response."
+            )
+        return result["problems"]
 
     def _request(self, method: str, params: dict[str, str]) -> Any:
         """Call one Codeforces API endpoint and return its result field."""
