@@ -12,3 +12,13 @@ Avoid minor style comments unless they hide a meaningful defect.
 - Do not claim test results that were not verified.
 - Do not invent Codeforces API behavior or undocumented assumptions.
 - Add path-specific instructions only when a concrete need has appeared; do not add them preemptively.
+
+## Issue, documentation, and contract review
+
+- When a pull request links a GitHub Issue, inspect the Issue's goal, scope, out-of-scope items, acceptance criteria, dependencies, and relevant discussion.
+- For a linked Issue, compare the pull request diff against every acceptance criterion. Report a missing requirement, missing evidence, or scope mismatch when found.
+- If the linked Issue, its criteria, or supporting evidence are unavailable, identify that limitation and do not claim that the Issue is complete.
+- Review documentation that is plausibly affected by the change. This may include `README.md`, `docs/architecture.md`, `docs/contracts.md`, `docs/workflow.md`, and the active sprint record when the change affects its scope, status, or outcome.
+- When public or module boundaries change, compare the implementation with `docs/contracts.md`, including field names, types, nullability, ordering, duplicate handling, error behavior, and JSON-serializability where applicable.
+- When a documented contract changes, require focused tests that demonstrate the changed behavior. Name the relevant contract section and missing test evidence in any finding.
+- Do not require unrelated documentation changes, unrelated refactoring, or speculative tests.

@@ -49,6 +49,7 @@ With the virtual environment activated:
 ```bash
 pytest
 ruff check .
+ruff format --check .
 ```
 
 ## Codeforces API client
