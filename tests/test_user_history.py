@@ -129,6 +129,7 @@ def test_unrated_user_with_no_valid_solved_problems_has_empty_history() -> None:
         "tag_solve_counts": {},
     }
 
+
 def test_build_user_context_counts_duplicate_tags_once_per_problem() -> None:
     profile = {"handle": "tourist", "rating": 3856}
     submissions = [
