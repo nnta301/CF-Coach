@@ -34,11 +34,11 @@ Every card must correspond to a GitHub Issue.
 - Use `Closes #<issue-number>` in the PR description.
 - The other teammate reviews before merge.
 - A bug is recorded as a GitHub Issue with reproduction steps, expected result, actual result, and evidence.
-- GitHub Actions runs `pytest` and `ruff check .` for pull requests targeting `main` and pushes to `main`. It is informational initially and is not a required merge check.
+- GitHub Actions runs `pytest`, `ruff check .`, and `ruff format --check .` for pull requests targeting `main` and pushes to `main`.
 - CI installs dependencies from the committed `requirements-dev.lock`. Update the lock intentionally when dependency requirements change.
 
 ## Shared environment
 
 - Each developer creates their own local Python 3.11 `.venv`.
 - Never commit `.venv` or `.env`.
-- Before opening a PR, run `pytest` and `ruff check .`.
+- Before opening a PR, run `pytest`, `ruff check .`, and `ruff format --check .`.
