@@ -37,6 +37,23 @@ Every card must correspond to a GitHub Issue.
 - GitHub Actions runs `pytest`, `ruff check .`, and `ruff format --check .` for pull requests targeting `main` and pushes to `main`.
 - CI installs dependencies from the committed `requirements-dev.lock`. Update the lock intentionally when dependency requirements change.
 
+## Manual CodeRabbit reviews
+
+Use CodeRabbit for an on-demand pull-request review when GitHub Copilot review quota is exhausted.
+
+Repository configuration lives in `.coderabbit.yaml`. Automatic reviews are disabled. Review guidelines remain in `.github/copilot-instructions.md` and apply to all reviewed files.
+
+Post these commands as separate top-level comments on the pull request:
+
+- `@coderabbitai review` — request an incremental review.
+- `@coderabbitai full review` — request a fresh review of the entire pull request.
+
+After pushing fixes, request another review manually when needed.
+
+Review availability depends on the account's current plan and usage limits. Record any restriction that prevents verification.
+
+The author must assess feedback and verify changes. CodeRabbit feedback does not replace the teammate review required before merge.
+
 ## Shared environment
 
 - Each developer creates their own local Python 3.11 `.venv`.
