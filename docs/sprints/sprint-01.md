@@ -46,12 +46,14 @@ _To be completed at the end of the sprint._
 ### Evidence
 
 - Pull requests:
-  - #5 problem catalog: [PR #17](https://github.com/nnta301/CF-Coach/pull/17), pending teammate review and merge.
-  - #6 baseline recommender: [PR #18](https://github.com/nnta301/CF-Coach/pull/18), draft depending on PR #17.
-- #7 CLI implementation is on `feat/7-recommendation-cli`, depending on PR #18; teammate review and merge remain pending.
+  - #5 problem catalog: [PR #17](https://github.com/nnta301/CF-Coach/pull/17).
+  - #6 baseline recommender: [PR #18](https://github.com/nnta301/CF-Coach/pull/18).
+  - #7 CLI: [PR #19](https://github.com/nnta301/CF-Coach/pull/19).
 - Demo/test results:
   - The combined #5–#7 implementation passed 60 local pytest tests and `ruff check .`. CLI tests cover raw fake API responses through display, invalid handles, unrated users, and insufficient candidates.
-  - `python -m src.app tourist` successfully displayed 10 recommendations using the live Codeforces API on 19 Oct 2026. The full three-handle demo remains part of #8.
+  - `python -m src.app tourist` successfully displayed 10 recommendations using the live Codeforces API on 19 Oct 2026.
+  - On 21 Oct 2026 (Asia/Bangkok), on the working tree based on `c6b270f6e2e25da95c6daa06dc3e9c83adc73514` with the uncommitted #8 verification changes, `python -m src.app` completed successfully for `tourist`, `Petr`, and `Benq`.
+  - The same day, `python -m scripts.verify_live_demo tourist Petr Benq` reported 10 recommendations and 0 solved-overlap IDs for each handle. The verifier fetches each handle's history once for its own overlap check. Live results are not deterministic because Codeforces data changes, and this check does not independently establish whether the remote endpoint returned a complete lifetime history.
 
 ## Retrospective
 
