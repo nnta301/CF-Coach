@@ -10,6 +10,7 @@ import requests
 from src.data.codeforces_client import (
     CodeforcesClient,
     CodeforcesClientError,
+    CodeforcesResponseError,
     CodeforcesUserNotFoundError,
 )
 
@@ -83,6 +84,23 @@ def test_get_user_profile_allows_unrated_user() -> None:
     assert profile == {"handle": "new_user", "rating": None}
 
 
+@pytest.mark.parametrize("boolean", [True, False])
+def test_get_user_profile_rejects_boolean_rating(boolean: bool) -> None:
+    session = FakeSession(
+        [
+            FakeResponse(
+                {
+                    "status": "OK",
+                    "result": [{"handle": "tourist", "rating": boolean}],
+                }
+            )
+        ]
+    )
+
+    with pytest.raises(CodeforcesResponseError, match="rating"):
+        make_client(session).get_user_profile("tourist")
+
+
 def test_empty_handle_is_rejected_before_request() -> None:
     session = FakeSession([])
 
@@ -151,6 +169,65 @@ def test_get_user_submissions_normalizes_response() -> None:
         }
     ]
     assert session.calls[0]["params"] == {"handle": "tourist"}
+
+
+@pytest.mark.parametrize("boolean", [True, False])
+@pytest.mark.parametrize(
+    "field",
+    ["id", "creationTimeSeconds", "contestId", "rating"],
+)
+def test_get_user_submissions_rejects_boolean_numeric_fields(
+    field: str,
+    boolean: bool,
+) -> None:
+    submission = {
+        "id": 123,
+        "creationTimeSeconds": 1_700_000_000,
+        "verdict": "OK",
+        "problem": {
+            "contestId": 4,
+            "index": "A",
+            "name": "Watermelon",
+            "rating": 800,
+            "tags": ["brute force", "math"],
+        },
+    }
+    target = (
+        submission if field in {"id", "creationTimeSeconds"} else submission["problem"]
+    )
+    target[field] = boolean
+    session = FakeSession([FakeResponse({"status": "OK", "result": [submission]})])
+
+    with pytest.raises(CodeforcesResponseError):
+        make_client(session).get_user_submissions("tourist")
+
+
+def test_get_user_submissions_allows_null_optional_numeric_problem_fields() -> None:
+    session = FakeSession(
+        [
+            FakeResponse(
+                {
+                    "status": "OK",
+                    "result": [
+                        {
+                            "id": 123,
+                            "creationTimeSeconds": 1_700_000_000,
+                            "problem": {
+                                "index": "A",
+                                "name": "Watermelon",
+                                "tags": [],
+                            },
+                        }
+                    ],
+                }
+            )
+        ]
+    )
+
+    submission = make_client(session).get_user_submissions("tourist")[0]
+
+    assert submission["problem"]["contest_id"] is None
+    assert submission["problem"]["rating"] is None
 
 
 def test_network_error_is_not_returned_as_empty_history() -> None:

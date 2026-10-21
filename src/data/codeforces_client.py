@@ -59,7 +59,7 @@ class CodeforcesClient:
             raise CodeforcesResponseError("User response does not contain a handle.")
 
         rating = user.get("rating")
-        if rating is not None and not isinstance(rating, int):
+        if rating is not None and type(rating) is not int:
             raise CodeforcesResponseError("User rating has an invalid format.")
 
         return {
@@ -186,10 +186,10 @@ class CodeforcesClient:
         problem_name = problem.get("name")
         problem_tags = problem.get("tags", [])
 
-        if not isinstance(submission_id, int):
+        if type(submission_id) is not int:
             raise CodeforcesResponseError("Submission does not contain a valid id.")
 
-        if not isinstance(creation_time_seconds, int):
+        if type(creation_time_seconds) is not int:
             raise CodeforcesResponseError(
                 "Submission does not contain a valid creation time."
             )
@@ -203,11 +203,11 @@ class CodeforcesClient:
             raise CodeforcesResponseError("Problem tags have an invalid format.")
 
         contest_id = problem.get("contestId")
-        if contest_id is not None and not isinstance(contest_id, int):
+        if contest_id is not None and type(contest_id) is not int:
             raise CodeforcesResponseError("Problem contest id has an invalid format.")
 
         rating = problem.get("rating")
-        if rating is not None and not isinstance(rating, int):
+        if rating is not None and type(rating) is not int:
             raise CodeforcesResponseError("Problem rating has an invalid format.")
 
         verdict = submission.get("verdict")
