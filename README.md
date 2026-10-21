@@ -6,7 +6,7 @@ CF-Coach is a personalized Codeforces problem recommender for competitive progra
 
 Current sprint: [Sprint 1](docs/sprints/sprint-01.md)
 
-Problem catalog, baseline recommender, and CLI implementations are available on the Sprint 1 feature branches and are pending teammate review and merge.
+The Sprint 1 data, recommendation, and CLI components are available on `main`. Live end-to-end verification for the Sprint 1 demo is tracked in [issue #8](https://github.com/nnta301/CF-Coach/issues/8).
 
 ## Documentation
 
@@ -117,3 +117,28 @@ The CLI fetches the user's profile, submission history, and problem catalog, the
 If fewer than 10 eligible problems exist, it shows all available results and explains the shortfall. An empty result is reported explicitly. Invalid/blank handles and API/network failures produce a readable message on stderr and exit status 1; argument usage errors use exit status 2. Successful output, including an empty result, uses exit status 0.
 
 This command needs internet access and makes three paced Codeforces API requests. It does not cache responses. Tests use fake HTTP responses and do not contact Codeforces.
+
+## Verify the live end-to-end demo
+
+Run the CLI for a handle, then use the verification command to run the shared
+pipeline for three public handles and check that no returned recommendation is
+in the solved IDs derived during that same run:
+
+```bash
+python -m src.app tourist
+python -m scripts.verify_live_demo tourist Petr Benq
+```
+
+The verifier prints one line per canonical handle in this form:
+
+```text
+tourist: 10 recommendations; solved overlap: 0
+```
+
+It exits with status 1 if a handle has no recommendations or if any recommended
+ID overlaps with the solved IDs. It fetches the problem catalog once and then
+fetches each handle's profile and submissions through the production client, so
+it obeys the configured request pacing. Live results change as Codeforces data
+changes. The verification checks the normalized submission history returned in
+that run; it does not independently establish whether the remote endpoint has
+returned a complete lifetime history.
