@@ -1,4 +1,4 @@
-"""Run the live Sprint 1 recommendation demo and verify solved exclusion."""
+"""Verify the live Sprint 1 end-to-end flow and solved-problem exclusion."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def verify_handles(
     *,
     client: CodeforcesClient | None = None,
 ) -> list[dict[str, Any]]:
-    """Return recommendation counts and solved overlaps for live demo handles."""
+    """Return recommendation counts and solved overlaps for live-flow handles."""
     api = client if client is not None else CodeforcesClient()
     problems = fetch_problem_catalog(api)
     results: list[dict[str, Any]] = []
@@ -48,7 +48,7 @@ def verify_handles(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Print reproducible live-demo verification results."""
+    """Print reproducible live end-to-end verification results and an exit status."""
     parser = argparse.ArgumentParser(
         description="Verify that live recommendations exclude solved Codeforces problems."
     )
@@ -63,7 +63,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         results = verify_handles(args.handles)
     except (CodeforcesClientError, ValueError) as error:
-        print(f"Could not run live demo verification: {error}", file=sys.stderr)
+        print(f"Could not run live-flow verification: {error}", file=sys.stderr)
         return 1
 
     valid = True

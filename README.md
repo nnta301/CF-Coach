@@ -6,7 +6,7 @@ CF-Coach is a personalized Codeforces problem recommender for competitive progra
 
 Current sprint: [Sprint 1](docs/sprints/sprint-01.md)
 
-The Sprint 1 data, recommendation, and CLI components are available on `main`. Live end-to-end verification for the Sprint 1 demo is tracked in [issue #8](https://github.com/nnta301/CF-Coach/issues/8).
+The Sprint 1 data, recommendation, and CLI components are available on `main`. Live end-to-end verification for the Sprint 1 flow is tracked in [issue #8](https://github.com/nnta301/CF-Coach/issues/8).
 
 ## Documentation
 
@@ -118,7 +118,7 @@ If fewer than 10 eligible problems exist, it shows all available results and exp
 
 This command needs internet access and makes three paced Codeforces API requests. It does not cache responses. Tests use fake HTTP responses and do not contact Codeforces.
 
-## Verify the live end-to-end demo
+## Verify the live end-to-end flow
 
 Run the CLI for a handle, then use the verification command to run the shared
 pipeline for three public handles and check that no returned recommendation is
@@ -126,7 +126,7 @@ in the solved IDs derived during that same run:
 
 ```bash
 python -m src.app tourist
-python -m scripts.verify_live_demo tourist Petr Benq
+python -m scripts.verify_live_flow tourist Petr Benq
 ```
 
 The verifier prints one line per canonical handle in this form:
