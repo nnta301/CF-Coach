@@ -202,7 +202,7 @@ def test_get_user_submissions_rejects_boolean_numeric_fields(
         make_client(session).get_user_submissions("tourist")
 
 
-def test_get_user_submissions_allows_null_optional_numeric_problem_fields() -> None:
+def test_get_user_submissions_allows_missing_optional_numeric_problem_fields() -> None:
     session = FakeSession(
         [
             FakeResponse(
@@ -215,6 +215,38 @@ def test_get_user_submissions_allows_null_optional_numeric_problem_fields() -> N
                             "problem": {
                                 "index": "A",
                                 "name": "Watermelon",
+                                "tags": [],
+                            },
+                        }
+                    ],
+                }
+            )
+        ]
+    )
+
+    submission = make_client(session).get_user_submissions("tourist")[0]
+
+    assert submission["problem"]["contest_id"] is None
+    assert submission["problem"]["rating"] is None
+
+
+def test_get_user_submissions_allows_explicit_null_optional_numeric_problem_fields() -> (
+    None
+):
+    session = FakeSession(
+        [
+            FakeResponse(
+                {
+                    "status": "OK",
+                    "result": [
+                        {
+                            "id": 123,
+                            "creationTimeSeconds": 1_700_000_000,
+                            "problem": {
+                                "contestId": None,
+                                "index": "A",
+                                "name": "Watermelon",
+                                "rating": None,
                                 "tags": [],
                             },
                         }
