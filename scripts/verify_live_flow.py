@@ -15,6 +15,29 @@ from src.recommender.baseline import recommend
 DEFAULT_HANDLES = ("tourist", "Petr", "Benq")
 
 
+def _expected_recommendation_count(
+    user_context: dict[str, Any],
+    problems: list[dict[str, Any]],
+) -> int:
+    """Return the capped count of unique, rated, unsolved candidates."""
+    solved_problem_ids = set(user_context["solved_problem_ids"])
+    seen_problem_ids: set[str] = set()
+    eligible_count = 0
+
+    for problem in problems:
+        problem_id = problem["problem_id"]
+        if (
+            problem_id in solved_problem_ids
+            or problem_id in seen_problem_ids
+            or problem["rating"] is None
+        ):
+            continue
+        seen_problem_ids.add(problem_id)
+        eligible_count += 1
+
+    return min(10, eligible_count)
+
+
 def verify_handles(
     handles: Sequence[str],
     *,
@@ -32,15 +55,27 @@ def verify_handles(
             api.get_user_submissions(profile["handle"]),
         )
         recommendations = recommend(user_context, problems)
-        recommended_ids = {item["problem_id"] for item in recommendations}
+        recommendation_ids = [item["problem_id"] for item in recommendations]
+        recommended_ids = set(recommendation_ids)
         solved_overlap = sorted(
             recommended_ids.intersection(user_context["solved_problem_ids"])
         )
+        seen_recommendation_ids: set[str] = set()
+        duplicate_recommendation_ids: set[str] = set()
+        for problem_id in recommendation_ids:
+            if problem_id in seen_recommendation_ids:
+                duplicate_recommendation_ids.add(problem_id)
+            seen_recommendation_ids.add(problem_id)
         results.append(
             {
                 "handle": profile["handle"],
                 "recommendation_count": len(recommendations),
+                "expected_recommendation_count": _expected_recommendation_count(
+                    user_context,
+                    problems,
+                ),
                 "solved_overlap": solved_overlap,
+                "duplicate_recommendation_ids": sorted(duplicate_recommendation_ids),
             }
         )
 
@@ -69,11 +104,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     valid = True
     for result in results:
         overlap = result["solved_overlap"]
+        duplicate_ids = result["duplicate_recommendation_ids"]
         print(
-            f"{result['handle']}: {result['recommendation_count']} recommendations; "
-            f"solved overlap: {len(overlap)}"
+            f"{result['handle']}: {result['recommendation_count']} recommendations "
+            f"(expected {result['expected_recommendation_count']}); solved overlap: "
+            f"{len(overlap)}; duplicate IDs: {len(duplicate_ids)}"
         )
-        if result["recommendation_count"] == 0 or overlap:
+        if (
+            result["recommendation_count"] == 0
+            or result["recommendation_count"] != result["expected_recommendation_count"]
+            or overlap
+            or duplicate_ids
+        ):
             valid = False
 
     return 0 if valid else 1
