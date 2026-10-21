@@ -54,6 +54,7 @@ _To be completed at the end of the sprint._
   - `python -m src.app tourist` successfully displayed 10 recommendations using the live Codeforces API on 19 Oct 2026.
   - On 21 Oct 2026 (Asia/Bangkok), on the working tree based on `c6b270f6e2e25da95c6daa06dc3e9c83adc73514` with the uncommitted #8 verification changes, `python -m src.app` completed successfully for `tourist`, `Petr`, and `Benq`.
   - The same day, `python -m scripts.verify_live_demo tourist Petr Benq` reported 10 recommendations and 0 solved-overlap IDs for each handle. The verifier fetches each handle's history once for its own overlap check. Live results are not deterministic because Codeforces data changes, and this check does not independently establish whether the remote endpoint returned a complete lifetime history.
+  - On 21 Oct 2026 (Asia/Bangkok), on the working tree based on `5ceb8cef265e68cdc78b238850a68d2ed33676c0` with uncommitted PR #24 review updates, `python -m scripts.verify_live_flow tourist Petr Benq` again reported 10 recommendations and 0 solved-overlap IDs for each handle. This is a new verification run using the renamed command; the prior `verify_live_demo` entry above remains historical evidence.
 
 ## Retrospective
 
