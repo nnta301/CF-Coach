@@ -132,13 +132,15 @@ python -m scripts.verify_live_flow tourist Petr Benq
 The verifier prints one line per canonical handle in this form:
 
 ```text
-tourist: 10 recommendations; solved overlap: 0
+tourist: 10 recommendations (expected 10); solved overlap: 0; duplicate IDs: 0
 ```
 
-It exits with status 1 if a handle has no recommendations or if any recommended
-ID overlaps with the solved IDs. It fetches the problem catalog once and then
-fetches each handle's profile and submissions through the production client, so
-it obeys the configured request pacing. Live results change as Codeforces data
-changes. The verification checks the normalized submission history returned in
-that run; it does not independently establish whether the remote endpoint has
-returned a complete lifetime history.
+It exits with status 1 if a handle has no recommendations, returns a count
+other than `min(10, eligible candidates)`, repeats a recommendation ID, or
+recommends a solved ID. Eligible candidates are unique, rated, unsolved
+problems. It fetches the problem catalog once and then fetches each handle's
+profile and submissions through the production client, so it obeys the
+configured request pacing. Live results change as Codeforces data changes. The
+verification checks the normalized submission history returned in that run; it
+does not independently establish whether the remote endpoint has returned a
+complete lifetime history.
